@@ -1,6 +1,6 @@
 # MSTSC Monitor Service
 
-This is a .NET console application that can be implemented as a service to monitor the idle time of the system and kill any running MSTSC (Microsoft Remote Desktop) processes if the idle time exceeds a specified threshold.
+This is a .NET console application that can be implemented as a service to monitor the idle time of the system and kill any running MSTSC (Microsoft Remote Desktop) processes if the idle time exceeds a specified threshold.  Please note the command line arguments and specifically the idletime.corp DNS entry.
 
 ## Prerequisites
 
@@ -43,22 +43,30 @@ MyService.exe --dnsQueryUrl=idletime.example.com --idleTimeInMinutes=30
 
 ## Implementing as a Service
 
-To implement the MSTSC Monitor Service as a Windows service, follow these steps:
+To implement the MSTSC Monitor Service as a Windows service with the command line arguments, follow these steps:
 
 1. Open the command prompt or PowerShell as an administrator.
 
-2. Navigate to the directory where the compiled `MyService.exe` file is located.
+2. Navigate to the directory where the compiled MyService.exe file is located.
 
-3. Install the service using the `sc` command:
-sc create MSTSCMonitorService binPath= "<path_to_MyService.exe>"
+3. Install the service using the sc command, specifying the command line arguments:
 
-Replace `<path_to_MyService.exe>` with the full path to the `MyService.exe` file.
+sc create MSTSCMonitorService binPath= "<path_to_MyService.exe> --idleTimeInMinutes=<value> --checkingDelay=<value> --dnsQueryUrl=<value>"
+
+Replace <path_to_MyService.exe> with the full path to the MyService.exe file. Also, replace <value> with the desired values for the command line arguments --idleTimeInMinutes, --checkingDelay, and --dnsQueryUrl.
+
+For example:
+
+sc create MSTSCMonitorService binPath= "C:\Path\To\MyService.exe --idleTimeInMinutes=60 --checkingDelay=10 --dnsQueryUrl=idletime.example.com"
 
 4. Start the service:
+
 sc start MSTSCMonitorService
 
+The service will now be running in the background and monitoring the idle time with the specified command line arguments.
 
-The service will now be running in the background and monitoring the idle time.
+Note: Make sure to provide valid values for the command line arguments and ensure that the MyService.exe file is located at the specified path.
+
 
 ## License
 
